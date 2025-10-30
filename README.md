@@ -23,12 +23,12 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-python excel_to_folium_map.py <excel_file> [output_file]
+python assignment2.py <excel_file> [output_file]
 ```
 
 Example:
 ```bash
-python excel_to_folium_map.py my_data.xlsx my_map.html
+python assignment2.py my_data.xlsx my_map.html
 ```
 
 If no output file is specified, it defaults to `map.html`.
