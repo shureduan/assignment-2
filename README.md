@@ -10,6 +10,7 @@ A Python script that parses an Excel spreadsheet with multiple tabs containing d
 - **Circles**: Circular regions with custom radius
 - **Heatmap**: Intensity-based visualization
 - **Marker Clustering**: Automatically groups nearby markers
+- **PA outline**：Draw the outline shape of PA state
 - **Multiple Map Layers**: Switch between different map styles
 
 ## Installation
@@ -128,7 +129,19 @@ latitude | longitude  | intensity
 40.7500  | -73.9900   | 1.0
 40.6900  | -74.0200   | 0.5
 ```
+### 6. outline (shape data)
 
+| Column | Type | Required | Description                     |
+|--------|------|----------|---------------------------------|
+| coordinate | float | Yes | Latitude, longtitude coordinate |
+
+**Example:**
+```
+coordinate 
+-74.0060,40.7128
+-73.9900,40.7500
+-74.0200,40.6900
+```
 ## Available Icon Types
 
 Common Folium/Font Awesome icons:

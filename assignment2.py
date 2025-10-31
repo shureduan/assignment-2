@@ -76,7 +76,19 @@ def add_markers(map_obj, df_markers, use_cluster=True):
 
 
 def add_lines(map_obj, df_lines):
-    pass
+    if df_lines is None or df_lines.empty:
+        return
+
+    for index, row in df_lines.iterrows():
+        line_coordinates = eval(row['coordinates'])
+
+    folium.PolyLine(
+        locations=line_coordinates,
+        color="blue",
+        weight=3,
+        opacity=0.7,
+        popup="Sample Line"
+    ).add_to(map_obj)
 
 
 def add_polygons(map_obj, df_polygons):
@@ -138,6 +150,27 @@ def add_circles(map_obj, df_circles):
             ).add_to(map_obj)
 
 
+def add_PA_outline(map_obj, df_outline):
+    if df_outline is None or df_outline.empty:
+        return
+
+    coord_data = df_outline.iloc[:, 0]
+
+    coordinates = []
+    for item in coord_data:
+        if isinstance(item, str) and ',' in item:
+            lon, lat = item.split(',')
+            coordinates.append([float(lat.strip()), float(lon.strip())])
+
+    if coordinates:
+        folium.Polygon(
+            locations=coordinates,
+            name='Pennsylvania Outline',
+            color='green',
+            weight=2,
+            fill=False
+        ).add_to(map_obj)
+
 def create_map_from_excel(excel_file, output_file='map.html',
                           center_lat=None, center_lon=None, zoom_start=10):
     """
@@ -167,6 +200,8 @@ def create_map_from_excel(excel_file, output_file='map.html',
     df_polygons = excel_data.get('polygons')
     df_heatmap = excel_data.get('heatmap')
     df_circles = excel_data.get('circles')
+    df_lines = excel_data.get('lines')
+    df_outline = excel_data.get('outline')
 
     # Calculate map center if not provided
     if center_lat is None or center_lon is None:
@@ -210,6 +245,12 @@ def create_map_from_excel(excel_file, output_file='map.html',
     print("Adding heatmap...")
     add_heatmap(m, df_heatmap)
 
+    print("Adding lines...")
+    add_lines(m, df_lines)
+
+    print("Adding outline...")
+    add_PA_outline(m, df_outline)
+
     # Add layer control
     folium.LayerControl().add_to(m)
 
@@ -231,6 +272,7 @@ if __name__ == "__main__":
         print("  polygons: name, coordinates, color, fill_color, fill_opacity, weight")
         print("  heatmap: latitude, longitude, intensity")
         print("  circles: latitude, longitude, radius, name, description, color, fill_color")
+        print("  outline: coordinates, color")
         sys.exit(1)
 
     excel_file = sys.argv[1]
